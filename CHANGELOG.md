@@ -30,5 +30,6 @@
 - Добавлена настройка `autoHighlight` для автоматической активации первого option.
 - Добавлена настройка `autoSelect` для подтверждения active option при blur.
 - Добавлена настройка `disabledItemsFocusable` для CollectionController.
+- Добавлен `RovingFocusController` для Menu, Tabs и групповых компонентов.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.
