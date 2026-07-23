@@ -9,3 +9,8 @@ export * from "./focus.js";
 export * from "./aria.js";
 export * from "./roving-focus.js";
 export * from "./menu.js";
+export * from "./tabs.js";
+export * from "./dialog.js";
+export * from "./popover.js";
+export * from "./menu-dom.js";
+export * from "./tabs-dom.js";

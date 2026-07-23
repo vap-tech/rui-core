@@ -32,5 +32,10 @@
 - Добавлена настройка `disabledItemsFocusable` для CollectionController.
 - Добавлен `RovingFocusController` для Menu, Tabs и групповых компонентов.
 - Добавлен headless `MenuController` с keyboard navigation и selection.
+- Добавлен headless `TabsController` с automatic/manual activation.
+- Добавлен `DialogController` с modal lifecycle, Escape и focus return.
+- Добавлен непозиционируемый `PopoverController` поверх PopupController.
+- Добавлен `bindMenu` с ARIA, roving focus и dynamic DOM refresh.
+- Добавлен `bindTabs` с ARIA, режимами активации и синхронизацией panels.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.
