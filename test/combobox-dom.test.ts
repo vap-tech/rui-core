@@ -89,6 +89,14 @@ test("opens on input focus only when configured", () => {
   input.dispatchEvent(new dom.window.Event("focus", { bubbles: true })); assert.equal(binding.controller.getState().open, true); binding.destroy();
 });
 
+test("syncs selected and freeSolo values to a form input", () => {
+  const dom = new JSDOM(`<div><input data-rui-input><input data-rui-value type="hidden"><div data-rui-popup><div data-rui-option id="one">One</div></div></div>`);
+  const root = dom.window.document.body.firstElementChild as HTMLElement;
+  const binding = bindCombobox(root, { freeSolo: true }); const value = root.querySelector("[data-rui-value]") as HTMLInputElement;
+  binding.controller.setItems([{ id: "one", value: "one", label: "One" }]); binding.controller.select("one"); assert.equal(value.value, "one");
+  binding.controller.setInputValue("custom"); binding.controller.setOpen(true); binding.controller.handleKeyDown({ key: "Enter", isComposing: false } as KeyboardEvent); assert.equal(value.value, "custom"); binding.destroy();
+});
+
 test("refreshes options when popup fragment changes", async () => {
   const { dom, popup, binding } = setup();
   const option = dom.window.document.createElement("div"); option.dataset.ruiOption = ""; option.id = "three"; option.textContent = "Three"; popup.append(option);

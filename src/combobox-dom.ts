@@ -12,6 +12,7 @@ export interface ComboboxBinding<T = string> {
 export function bindCombobox<T = string>(root: HTMLElement, options: ComboboxOptions<T> = {}): ComboboxBinding<T> {
   const input = root.querySelector<HTMLElement>("[data-rui-input]");
   const popupElement = root.querySelector<HTMLElement>("[data-rui-popup]");
+  const valueElement = root.querySelector<HTMLInputElement>("[data-rui-value]");
   if (!input || !popupElement) throw new Error("Combobox requires [data-rui-input] and [data-rui-popup]");
   const controller = new ComboboxController<T>(options);
   const popup = new PopupController();
@@ -25,6 +26,7 @@ export function bindCombobox<T = string>(root: HTMLElement, options: ComboboxOpt
   const readItems = (): CollectionItem<T>[] => Array.from(popupElement.querySelectorAll<HTMLElement>("[data-rui-option]")).map((element, index) => ({ id: element.id || `${popupElement.id}-option-${index}`, value: element.dataset.value as T, label: element.textContent?.trim() ?? "", disabled: element.dataset.disabled === "true" || element.getAttribute("aria-disabled") === "true", hidden: element.hidden, element }));
   const sync = (): void => {
     const state = controller.getState();
+    if (valueElement) valueElement.value = state.freeSoloValue ?? (state.collection.selectedIds[0] ?? "");
     input.setAttribute("aria-expanded", String(state.open));
     input.setAttribute("aria-autocomplete", options.mode === "select-only" ? "none" : "list");
     const active = state.collection.activeId;
@@ -42,7 +44,8 @@ export function bindCombobox<T = string>(root: HTMLElement, options: ComboboxOpt
   const onFocus = (): void => { if (options.openOnFocus) { controller.setOpen(true, "open"); sync(); } };
   const onKeyDown = (event: KeyboardEvent): void => { if (controller.handleKeyDown(event)) { event.preventDefault(); sync(); } };
   const onClick = (event: MouseEvent): void => { const option = (event.target as HTMLElement).closest<HTMLElement>("[data-rui-option]"); if (option?.parentElement === popupElement) { controller.select(option.id, event); popup.close("select"); sync(); } };
-  input.addEventListener("input", onInput); input.addEventListener("focus", onFocus); input.addEventListener("keydown", onKeyDown); popupElement.addEventListener("click", onClick);
+  const onValueChange = (): void => { if (valueElement) { valueElement.dispatchEvent(new valueElement.ownerDocument.defaultView!.Event("input", { bubbles: true })); valueElement.dispatchEvent(new valueElement.ownerDocument.defaultView!.Event("change", { bubbles: true })); } };
+  input.addEventListener("input", onInput); input.addEventListener("focus", onFocus); input.addEventListener("keydown", onKeyDown); popupElement.addEventListener("click", onClick); const unsubscribeValue = controller.subscribe(() => onValueChange());
   refresh();
-  return { controller, popup, refresh, destroy(): void { if (destroyed) return; destroyed = true; unsubscribe(); unsubscribePopup(); observer?.disconnect(); input.removeEventListener("input", onInput); input.removeEventListener("focus", onFocus); input.removeEventListener("keydown", onKeyDown); popupElement.removeEventListener("click", onClick); popup.destroy(); controller.destroy(); } };
+  return { controller, popup, refresh, destroy(): void { if (destroyed) return; destroyed = true; unsubscribe(); unsubscribeValue(); unsubscribePopup(); observer?.disconnect(); input.removeEventListener("input", onInput); input.removeEventListener("focus", onFocus); input.removeEventListener("keydown", onKeyDown); popupElement.removeEventListener("click", onClick); popup.destroy(); controller.destroy(); } };
 }

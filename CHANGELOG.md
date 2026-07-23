@@ -18,5 +18,6 @@
 - Добавлен `FocusController` для focus containment и возврата фокуса.
 - Добавлена опция `selectOnTab` для Combobox.
 - Добавлена настройка `openOnFocus` для Combobox DOM adapter.
+- Добавлена синхронизация Combobox с form input через `[data-rui-value]`.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.
