@@ -28,5 +28,6 @@
 - Улучшена обработка IME/composition input в Combobox.
 - Добавлено восстановление исходных Combobox values через `form.reset()`.
 - Добавлена настройка `autoHighlight` для автоматической активации первого option.
+- Добавлена настройка `autoSelect` для подтверждения active option при blur.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.

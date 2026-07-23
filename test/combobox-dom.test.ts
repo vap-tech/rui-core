@@ -123,6 +123,13 @@ test("form reset restores initial combobox values", async () => {
   assert.equal(input.value, "Initial"); assert.equal(value.value, "one"); binding.destroy();
 });
 
+test("DOM blur honors autoSelect", () => {
+  const { dom, root, input, binding } = setup(); const configured = bindCombobox(root, { autoSelect: true });
+  configured.controller.setOpen(true); configured.controller.collection.setActive("two");
+  input.dispatchEvent(new dom.window.FocusEvent("blur", { bubbles: true, relatedTarget: dom.window.document.body }));
+  assert.deepEqual(configured.controller.getState().collection.selectedIds, ["two"]); configured.destroy(); binding.destroy();
+});
+
 test("refreshes options when popup fragment changes", async () => {
   const { dom, popup, binding } = setup();
   const option = dom.window.document.createElement("div"); option.dataset.ruiOption = ""; option.id = "three"; option.textContent = "Three"; popup.append(option);

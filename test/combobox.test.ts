@@ -143,3 +143,9 @@ test("autoHighlight activates first visible option without selecting it", () => 
   const combo = new ComboboxController({ autoHighlight: true }); combo.setItems(items); combo.setOpen(true);
   assert.equal(combo.getState().collection.activeId, "apple"); assert.deepEqual(combo.getState().collection.selectedIds, []);
 });
+
+test("autoSelect selects active option on blur only when configured", () => {
+  const combo = new ComboboxController({ autoSelect: true }); combo.setItems(items); combo.setOpen(true); combo.collection.setActive("banana");
+  assert.equal(combo.handleBlur(), true); assert.deepEqual(combo.getState().collection.selectedIds, ["banana"]);
+  const defaultCombo = new ComboboxController(); defaultCombo.setItems(items); defaultCombo.setOpen(true); defaultCombo.collection.setActive("banana"); defaultCombo.handleBlur(); assert.deepEqual(defaultCombo.getState().collection.selectedIds, []);
+});
