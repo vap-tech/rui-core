@@ -105,4 +105,11 @@ npm test
 npm run typecheck
 npm run build
 npm run coverage
+npm run test:browser
+```
+
+Для первого запуска browser-тестов установите браузеры Playwright:
+
+```bash
+npx playwright install chromium firefox webkit
 ```

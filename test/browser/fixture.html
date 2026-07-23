@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <body>
+    <form id="form">
+      <div id="combo" data-rui-combobox>
+        <input data-rui-input aria-label="Search">
+        <input data-rui-value type="hidden">
+        <div data-rui-popup>
+          <div data-rui-option id="one">One</div>
+          <div data-rui-option id="two">Two</div>
+        </div>
+      </div>
+    </form>
+    <script type="module">
+      import { bindCombobox } from "/dist/src/index.js";
+      window.bindCombobox = bindCombobox;
+    </script>
+  </body>
+</html>
