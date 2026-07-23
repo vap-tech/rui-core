@@ -1,19 +1,92 @@
 # RepUI Core
 
-Headless TypeScript-механика для компонентов RepUI.
+RepUI Core — headless-механика для интерактивных компонентов RepUI.
 
-## Проверки
+Библиотека хранит состояние и обрабатывает взаимодействие, но не рисует интерфейс и не навязывает CSS. Она не зависит от React, Vue, Django или конкретного UI-фреймворка.
 
-Запуск unit-тестов:
+## Что внутри
+
+- `CollectionController` — коллекция options, active state, selection, disabled/hidden и навигация.
+- `ComboboxController` — input, filtering, keyboard navigation, typeahead, `freeSolo` и popup state.
+- `PopupController` — open/close, outside-click, причины закрытия и возврат фокуса.
+- `FocusController` — удержание Tab-фокуса внутри контейнера.
+- DOM adapters — `bindListbox`, `bindCombobox`, `bindSelect`.
+- `RepUI.mount()` / `RepUI.unmount()` — безопасная инициализация DOM-фрагментов, включая HTMX/Django-сценарии.
+
+Состояния `active` и `selected` разделены. Core не считает CSS (`:hover`, `.active`, `.selected`) источником истины — DOM только отображает состояние через ARIA и `data-*` атрибуты.
+
+## Быстрое подключение
+
+После сборки пакет можно подключить локально или из Git-репозитория:
 
 ```bash
-npm test
+npm install git+ssh://git@github.com/vap-tech/rui-core.git
 ```
 
-Проверка покрытия кода:
+Для обычного Listbox разметка может выглядеть так:
+
+```html
+<div data-rui-listbox id="status-list">
+  <button data-rui-option data-value="ready">Ready</button>
+  <button data-rui-option data-value="paused" data-disabled="true">Paused</button>
+</div>
+```
+
+```ts
+import { RepUI, bindListbox } from "@repui/core";
+
+const listbox = document.querySelector("[data-rui-listbox]");
+if (listbox instanceof HTMLElement) {
+  const instance = bindListbox(listbox);
+  // instance.controller — состояние и команды контроллера
+  // instance.destroy() — полное отключение
+}
+
+// Либо автоматическая инициализация:
+RepUI.mount(listbox as HTMLElement);
+```
+
+Для нативного Select:
+
+```ts
+import { bindSelect } from "@repui/core";
+
+const select = document.querySelector("select[data-rui-select]");
+if (select instanceof HTMLSelectElement) {
+  const instance = bindSelect(select);
+  instance.controller.select("ready");
+}
+```
+
+Для Combobox нужны элементы с атрибутами `data-rui-input`, `data-rui-popup` и `data-rui-option`; adapter сам синхронизирует ARIA и keyboard events:
+
+```ts
+import { bindCombobox } from "@repui/core";
+
+const root = document.querySelector("[data-rui-combobox]");
+if (root instanceof HTMLElement) {
+  const instance = bindCombobox(root, {
+    mode: "editable",
+    freeSolo: true,
+    openOnFocus: true,
+  });
+}
+```
+
+При замене HTML-фрагмента старый instance нужно уничтожить. Для этого можно использовать `RepUI.unmount(root)` перед повторным `RepUI.mount(root)`; adapters также автоматически обновляют options через `MutationObserver`.
+
+## Разработка
+
+Проект написан на TypeScript. Unit- и DOM-тесты запускаются через Node test runner, JSDOM используется для проверки adapters.
+
+HTML-отчёт покрытия после запуска находится в `coverage/index.html`.
+
+## Команды
 
 ```bash
+npm install
+npm test
+npm run typecheck
+npm run build
 npm run coverage
 ```
-
-После выполнения HTML-отчёт доступен в `coverage/`.
