@@ -23,5 +23,6 @@
 - Унифицирован payload событий `PopupController`.
 - Добавлен чистый ARIA adapter без DOM-зависимости.
 - Добавлена обработка blur lifecycle в `PopupController`.
+- Добавлена настройка порядка multiple selection: selection или collection order.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.

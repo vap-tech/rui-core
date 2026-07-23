@@ -73,3 +73,9 @@ test("updates and removes items safely", () => {
   collection.select("a"); assert.equal(collection.select("a"), false);
   assert.equal(collection.deselect("missing"), false); collection.clearSelection(); assert.equal(collection.clearSelection(), false);
 });
+
+test("supports collection order for multiple selection", () => {
+  const collection = new CollectionController({ selectionMode: "multiple", selectionOrder: "collection" });
+  collection.setItems(items); collection.select("d"); collection.select("a");
+  assert.deepEqual(collection.getState().selectedIds, ["a", "d"]);
+});

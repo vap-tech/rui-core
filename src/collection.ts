@@ -38,6 +38,7 @@ export interface CollectionOptions {
   selectionMode?: SelectionMode;
   allowEmptySelection?: boolean;
   loopNavigation?: boolean;
+  selectionOrder?: "selection" | "collection";
 }
 
 type Listener<T> = (change: CollectionChange<T>) => void;
@@ -56,6 +57,7 @@ export class CollectionController<T = unknown> {
       selectionMode: options.selectionMode ?? "single",
       allowEmptySelection: options.allowEmptySelection ?? true,
       loopNavigation: options.loopNavigation ?? false,
+      selectionOrder: options.selectionOrder ?? "selection",
     };
   }
 
@@ -117,7 +119,7 @@ export class CollectionController<T = unknown> {
       const previous = this.getState(); this.selectedIds = [id]; this.emit(previous, "select", event); return true;
     }
     if (this.selectedIds.includes(id)) return this.deselect(id, event);
-    const previous = this.getState(); this.selectedIds = [...this.selectedIds, id]; this.emit(previous, "select", event); return true;
+    const previous = this.getState(); this.selectedIds = [...this.selectedIds, id]; if (this.options.selectionOrder === "collection") this.selectedIds.sort((a, b) => this.items.findIndex((item) => item.id === a) - this.items.findIndex((item) => item.id === b)); this.emit(previous, "select", event); return true;
   }
   deselect(id: string, event: Event | null = null): boolean { this.assertAlive(); if (!this.selectedIds.includes(id)) return false; const previous = this.getState(); this.selectedIds = this.selectedIds.filter((selected) => selected !== id); this.emit(previous, "deselect", event); return true; }
   clearSelection(event: Event | null = null): boolean { this.assertAlive(); if (!this.selectedIds.length && this.options.allowEmptySelection) return false; const previous = this.getState(); this.selectedIds = []; this.emit(previous, "clear", event); return true; }

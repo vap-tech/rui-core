@@ -125,7 +125,10 @@ test("emits a unified change payload", () => {
 
 test("ARIA adapter returns framework-independent attributes", () => {
   assert.deepEqual(getComboboxAria({ expanded: true, activeId: "one", popupId: "list" })["aria-activedescendant"], "one");
+  assert.equal("aria-activedescendant" in getComboboxAria({ expanded: false, activeId: null, popupId: "list" }), false);
   assert.deepEqual(getComboboxAria({ expanded: false, activeId: null, popupId: "list", autocomplete: "none" })["aria-autocomplete"], "none");
   assert.deepEqual(getListboxAria(true), { role: "listbox", "aria-multiselectable": "true" });
+  assert.deepEqual(getListboxAria(false), { role: "listbox" });
   assert.equal(getOptionAria({ id: "x", value: "x", label: "X", disabled: true }, false)["aria-disabled"], "true");
+  assert.equal("aria-disabled" in getOptionAria({ id: "y", value: "y", label: "Y" }, true), false);
 });
