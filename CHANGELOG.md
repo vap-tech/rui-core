@@ -26,5 +26,6 @@
 - Добавлена настройка порядка multiple selection: selection или collection order.
 - Исправлено соблюдение `closeOnSelect` в Combobox DOM adapter.
 - Улучшена обработка IME/composition input в Combobox.
+- Добавлено восстановление исходных Combobox values через `form.reset()`.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.

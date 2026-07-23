@@ -12,8 +12,11 @@ export interface ComboboxBinding<T = string> {
 export function bindCombobox<T = string>(root: HTMLElement, options: ComboboxOptions<T> = {}): ComboboxBinding<T> {
   const input = root.querySelector<HTMLElement>("[data-rui-input]");
   const popupElement = root.querySelector<HTMLElement>("[data-rui-popup]");
-  const valueElement = root.querySelector<HTMLInputElement>("[data-rui-value]");
   if (!input || !popupElement) throw new Error("Combobox requires [data-rui-input] and [data-rui-popup]");
+  const valueElement = root.querySelector<HTMLInputElement>("[data-rui-value]");
+  const form = root.closest("form");
+  const initialInputValue = (input as HTMLInputElement).value;
+  const initialValue = valueElement?.value ?? "";
   const controller = new ComboboxController<T>(options);
   const popup = new PopupController();
   popup.setTrigger(input); popup.setPopup(popupElement);
@@ -47,7 +50,8 @@ export function bindCombobox<T = string>(root: HTMLElement, options: ComboboxOpt
   const onKeyDown = (event: KeyboardEvent): void => { if (controller.handleKeyDown(event)) { event.preventDefault(); sync(); } };
   const onClick = (event: MouseEvent): void => { const option = (event.target as HTMLElement).closest<HTMLElement>("[data-rui-option]"); if (option?.parentElement === popupElement) { controller.select(option.id, event); if (options.closeOnSelect !== false) popup.close("select"); sync(); } };
   const onValueChange = (): void => { if (valueElement) { valueElement.dispatchEvent(new valueElement.ownerDocument.defaultView!.Event("input", { bubbles: true })); valueElement.dispatchEvent(new valueElement.ownerDocument.defaultView!.Event("change", { bubbles: true })); } };
-  input.addEventListener("input", onInput); input.addEventListener("compositionstart", onCompositionStart); input.addEventListener("compositionend", onCompositionEnd); input.addEventListener("focus", onFocus); input.addEventListener("keydown", onKeyDown); popupElement.addEventListener("click", onClick); const unsubscribeValue = controller.subscribe(() => onValueChange());
+  const onReset = (): void => { queueMicrotask(() => { if (destroyed) return; (input as HTMLInputElement).value = initialInputValue; if (valueElement) valueElement.value = initialValue; controller.setInputValue(initialInputValue, "programmatic"); controller.collection.clearSelection(); if (initialValue) controller.select(initialValue); sync(); }); };
+  input.addEventListener("input", onInput); input.addEventListener("compositionstart", onCompositionStart); input.addEventListener("compositionend", onCompositionEnd); input.addEventListener("focus", onFocus); input.addEventListener("keydown", onKeyDown); popupElement.addEventListener("click", onClick); form?.addEventListener("reset", onReset); const unsubscribeValue = controller.subscribe(() => onValueChange());
   refresh();
-  return { controller, popup, refresh, destroy(): void { if (destroyed) return; destroyed = true; unsubscribe(); unsubscribeValue(); unsubscribePopup(); observer?.disconnect(); input.removeEventListener("input", onInput); input.removeEventListener("compositionstart", onCompositionStart); input.removeEventListener("compositionend", onCompositionEnd); input.removeEventListener("focus", onFocus); input.removeEventListener("keydown", onKeyDown); popupElement.removeEventListener("click", onClick); popup.destroy(); controller.destroy(); } };
+  return { controller, popup, refresh, destroy(): void { if (destroyed) return; destroyed = true; unsubscribe(); unsubscribeValue(); unsubscribePopup(); observer?.disconnect(); input.removeEventListener("input", onInput); input.removeEventListener("compositionstart", onCompositionStart); input.removeEventListener("compositionend", onCompositionEnd); input.removeEventListener("focus", onFocus); input.removeEventListener("keydown", onKeyDown); popupElement.removeEventListener("click", onClick); form?.removeEventListener("reset", onReset); popup.destroy(); controller.destroy(); } };
 }

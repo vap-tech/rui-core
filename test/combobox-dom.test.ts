@@ -114,6 +114,15 @@ test("DOM composition events update value after compositionend", () => {
   assert.equal(binding.controller.getState().inputValue, "тест"); binding.destroy();
 });
 
+test("form reset restores initial combobox values", async () => {
+  const dom = new JSDOM(`<form><div><input data-rui-input value="Initial"><input data-rui-value type="hidden" value="one"><div data-rui-popup><div data-rui-option id="one">One</div><div data-rui-option id="two">Two</div></div></div></form>`);
+  const form = dom.window.document.querySelector("form")!; const root = form.firstElementChild as HTMLElement;
+  const binding = bindCombobox(root); const input = root.querySelector("[data-rui-input]") as HTMLInputElement; const value = root.querySelector("[data-rui-value]") as HTMLInputElement;
+  binding.controller.setItems([{ id: "one", value: "one", label: "One" }, { id: "two", value: "two", label: "Two" }]); binding.controller.select("two"); input.value = "Changed";
+  form.dispatchEvent(new dom.window.Event("reset", { bubbles: true })); await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(input.value, "Initial"); assert.equal(value.value, "one"); binding.destroy();
+});
+
 test("refreshes options when popup fragment changes", async () => {
   const { dom, popup, binding } = setup();
   const option = dom.window.document.createElement("div"); option.dataset.ruiOption = ""; option.id = "three"; option.textContent = "Three"; popup.append(option);
