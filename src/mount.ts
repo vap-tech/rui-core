@@ -9,8 +9,11 @@ import { bindCommandPalette, CommandPaletteBinding } from "./command-palette-dom
 import { bindTreeView, TreeViewBinding } from "./tree-view-dom.js";
 import { bindAccordion, AccordionBinding } from "./accordion-dom.js";
 import { bindSwitch, SwitchBinding } from "./switch-dom.js";
+import { bindCheckbox, CheckboxBinding, bindCheckboxGroup, CheckboxGroupBinding } from "./checkbox-dom.js";
+import { bindSlider, SliderBinding, bindRangeSlider, RangeSliderBinding } from "./slider-dom.js";
+import { bindTooltip, TooltipBinding, bindHovercard } from "./tooltip-dom.js";
 
-export type RepUIBinding = ComboboxBinding | ListboxBinding | SelectBinding | MenuBinding | TabsBinding | DialogBinding | PopoverBinding | CommandPaletteBinding | TreeViewBinding | AccordionBinding | SwitchBinding;
+export type RepUIBinding = ComboboxBinding | ListboxBinding | SelectBinding | MenuBinding | TabsBinding | DialogBinding | PopoverBinding | CommandPaletteBinding | TreeViewBinding | AccordionBinding | SwitchBinding | CheckboxBinding | CheckboxGroupBinding | SliderBinding | RangeSliderBinding | TooltipBinding;
 const instances = new WeakMap<HTMLElement, RepUIBinding>();
 
 export function mount(root: HTMLElement): RepUIBinding | null {
@@ -27,6 +30,12 @@ export function mount(root: HTMLElement): RepUIBinding | null {
   else if (root.matches("[data-rui-tree]")) binding = bindTreeView(root);
   else if (root.matches("[data-rui-accordion]")) binding = bindAccordion(root);
   else if (root.matches("[data-rui-switch]")) binding = bindSwitch(root);
+  else if (root.matches("[data-rui-checkbox-group]")) binding = bindCheckboxGroup(root);
+  else if (root.matches("[data-rui-checkbox]")) binding = bindCheckbox(root);
+  else if (root.matches("[data-rui-range-slider]")) binding = bindRangeSlider(root);
+  else if (root.matches("[data-rui-slider]")) binding = bindSlider(root);
+  else if (root.matches("[data-rui-hovercard]")) binding = bindHovercard(root);
+  else if (root.matches("[data-rui-tooltip]")) binding = bindTooltip(root);
   if (binding) instances.set(root, binding);
   return binding;
 }
