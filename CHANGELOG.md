@@ -31,5 +31,6 @@
 - Добавлена настройка `autoSelect` для подтверждения active option при blur.
 - Добавлена настройка `disabledItemsFocusable` для CollectionController.
 - Добавлен `RovingFocusController` для Menu, Tabs и групповых компонентов.
+- Добавлен headless `MenuController` с keyboard navigation и selection.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.
