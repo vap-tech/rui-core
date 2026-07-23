@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { ComboboxController } from "../src/combobox.js";
+import { getComboboxAria, getListboxAria, getOptionAria } from "../src/aria.js";
 
 const items = [
   { id: "apple", value: "apple", label: "Apple" },
@@ -120,4 +121,11 @@ test("emits a unified change payload", () => {
   combo.subscribe((_state, reason, change) => { if (reason === "input") payload = change; });
   combo.setInputValue("abc");
   assert.equal(payload.reason, "input"); assert.equal(payload.event, null); assert.equal(payload.previousState.inputValue, ""); assert.equal(payload.state.inputValue, "abc");
+});
+
+test("ARIA adapter returns framework-independent attributes", () => {
+  assert.deepEqual(getComboboxAria({ expanded: true, activeId: "one", popupId: "list" })["aria-activedescendant"], "one");
+  assert.deepEqual(getComboboxAria({ expanded: false, activeId: null, popupId: "list", autocomplete: "none" })["aria-autocomplete"], "none");
+  assert.deepEqual(getListboxAria(true), { role: "listbox", "aria-multiselectable": "true" });
+  assert.equal(getOptionAria({ id: "x", value: "x", label: "X", disabled: true }, false)["aria-disabled"], "true");
 });

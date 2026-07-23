@@ -21,5 +21,6 @@
 - Добавлена синхронизация Combobox с form input через `[data-rui-value]`.
 - Добавлена ранняя pointerdown-активация options в Listbox для touch/pointer сценариев.
 - Унифицирован payload событий `PopupController`.
+- Добавлен чистый ARIA adapter без DOM-зависимости.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.

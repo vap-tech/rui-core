@@ -6,3 +6,4 @@ export * from "./combobox-dom.js";
 export * from "./select.js";
 export * from "./mount.js";
 export * from "./focus.js";
+export * from "./aria.js";
