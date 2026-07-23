@@ -12,6 +12,10 @@
 - [ ] Tree сообщает hierarchy, expanded/collapsed и selection.
 - [ ] Radio Group объявляет checked radio и стрелочную навигацию.
 - [ ] Toggle Group/Switch объявляют pressed/checked state.
+- [ ] Checkbox объявляет `aria-checked` для `true`, `false` и `mixed`.
+- [ ] Slider объявляет min/max/now/orientation и управляется стрелками/Home/End.
+- [ ] Tooltip связывает trigger/content через `aria-describedby` и не забирает фокус.
+- [ ] Menubar и Context Menu поддерживают keyboard opening, Escape и возврат фокуса.
 
 ## VoiceOver + Safari
 

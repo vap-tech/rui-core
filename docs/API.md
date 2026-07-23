@@ -30,6 +30,11 @@ instance.destroy();
 - `TreeViewController` — hierarchical navigation, expand/collapse, selection.
 - `AccordionController` — single/multiple раскрытые секции.
 - `SwitchController` — boolean checked state.
+- `CheckboxController` / `CheckboxGroupController` — unchecked/checked/mixed и multiple selection.
+- `SliderController` / `RangeSliderController` — значения, диапазон, keyboard и pointer interaction.
+- `TooltipController` / `HovercardController` — hover/focus/touch lifecycle, delays и Escape.
+- `MenubarController` — связка нескольких MenuController с arrow navigation.
+- `ContextMenuController` — contextmenu/keyboard opening и координаты открытия.
 
 ## DOM adapters
 
@@ -47,6 +52,14 @@ bindToggleGroup(root, "single" | "multiple")
 bindTreeView(root)
 bindAccordion(root, { multiple?: boolean })
 bindSwitch(root)
+bindCheckbox(root)
+bindCheckboxGroup(root)
+bindSlider(root)
+bindRangeSlider(root)
+bindTooltip(root)
+bindHovercard(root)
+bindMenubar(root)
+bindContextMenu(root)
 ```
 
 `RepUI.mount(root)` автоматически выбирает adapter по `data-rui-*`, а `RepUI.unmount(root)` уничтожает instance.

@@ -17,3 +17,9 @@ test("new controllers cover guards and alternate paths", () => {
   const accordion = new AccordionController({ multiple: true }); accordion.setItems([{ id: "one" }]); assert.equal(accordion.toggle("missing"), false); accordion.toggle("one"); accordion.toggle("one"); accordion.destroy(); accordion.destroy();
   const toggleSwitch = new SwitchController({ checked: true }); assert.equal(toggleSwitch.setChecked(true), false); assert.equal(toggleSwitch.handleKeyDown({ key: "Escape" } as KeyboardEvent), false); toggleSwitch.destroy(); toggleSwitch.destroy();
 });
+
+test("tree view covers public expansion and subscription lifecycle", () => {
+  const tree = new TreeViewController(); let changes = 0; const off = tree.subscribe(() => changes++);
+  tree.setItems([{ id: "root", value: "root", label: "Root" }, { id: "child", value: "child", label: "Child", parentId: "root" }]);
+  assert.equal(tree.expand("root"), true); assert.equal(tree.expand("root"), false); assert.equal(tree.toggle("root"), true); assert.equal(tree.toggle("root"), true); assert.equal(tree.collapse("root"), true); assert.equal(tree.collapse("root"), false); off(); assert.ok(changes > 0); tree.destroy();
+});

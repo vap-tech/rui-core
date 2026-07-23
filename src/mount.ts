@@ -12,8 +12,9 @@ import { bindSwitch, SwitchBinding } from "./switch-dom.js";
 import { bindCheckbox, CheckboxBinding, bindCheckboxGroup, CheckboxGroupBinding } from "./checkbox-dom.js";
 import { bindSlider, SliderBinding, bindRangeSlider, RangeSliderBinding } from "./slider-dom.js";
 import { bindTooltip, TooltipBinding, bindHovercard } from "./tooltip-dom.js";
+import { bindMenubar, MenubarBinding, bindContextMenu, ContextMenuBinding } from "./menu-extensions-dom.js";
 
-export type RepUIBinding = ComboboxBinding | ListboxBinding | SelectBinding | MenuBinding | TabsBinding | DialogBinding | PopoverBinding | CommandPaletteBinding | TreeViewBinding | AccordionBinding | SwitchBinding | CheckboxBinding | CheckboxGroupBinding | SliderBinding | RangeSliderBinding | TooltipBinding;
+export type RepUIBinding = ComboboxBinding | ListboxBinding | SelectBinding | MenuBinding | TabsBinding | DialogBinding | PopoverBinding | CommandPaletteBinding | TreeViewBinding | AccordionBinding | SwitchBinding | CheckboxBinding | CheckboxGroupBinding | SliderBinding | RangeSliderBinding | TooltipBinding | MenubarBinding | ContextMenuBinding;
 const instances = new WeakMap<HTMLElement, RepUIBinding>();
 
 export function mount(root: HTMLElement): RepUIBinding | null {
@@ -36,6 +37,8 @@ export function mount(root: HTMLElement): RepUIBinding | null {
   else if (root.matches("[data-rui-slider]")) binding = bindSlider(root);
   else if (root.matches("[data-rui-hovercard]")) binding = bindHovercard(root);
   else if (root.matches("[data-rui-tooltip]")) binding = bindTooltip(root);
+  else if (root.matches("[data-rui-menubar]")) binding = bindMenubar(root);
+  else if (root.matches("[data-rui-context-menu]")) binding = bindContextMenu(root);
   if (binding) instances.set(root, binding);
   return binding;
 }

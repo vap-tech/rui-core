@@ -31,14 +31,22 @@
     <div id="tree" data-rui-tree><button data-rui-treeitem>Root</button><button data-rui-treeitem data-parent="tree-0">Child</button></div>
     <div id="accordion" data-rui-accordion><section id="acc-one" data-rui-accordion-item><button data-rui-accordion-trigger>Section</button><div data-rui-accordion-content>Content</div></section></div>
     <button id="switch" data-rui-switch>Switch</button>
+    <button id="checkbox" data-rui-checkbox>Accept</button>
+    <div id="checkbox-group" data-rui-checkbox-group><button data-rui-checkbox>One</button><button data-rui-checkbox>Two</button></div>
+    <div id="slider" data-rui-slider data-min="0" data-max="100" data-value="20"></div>
+    <div id="range-slider" data-rui-range-slider data-value-start="20" data-value-end="80"><button data-rui-slider-thumb></button><button data-rui-slider-thumb></button></div>
+    <button data-rui-tooltip-trigger="help">Help</button><div id="tooltip" data-rui-tooltip data-rui-tooltip-trigger="help">Helpful text</div>
+    <div id="menubar" data-rui-menubar tabindex="0"><div data-rui-menu><button data-rui-menuitem>File</button></div><div data-rui-menu><button data-rui-menuitem>Edit</button></div></div>
+    <div id="context-menu" data-rui-context-menu><div data-rui-menu><button data-rui-menuitem>Copy</button></div></div>
     <script type="module">
-      import { bindCombobox, bindTabs, bindDialog, bindCommandPalette, bindSelect, bindListbox, bindMenu, bindPopover, bindRadioGroup, bindToggleGroup, bindTreeView, bindAccordion, bindSwitch } from "/dist/src/index.js";
+      import { bindCombobox, bindTabs, bindDialog, bindCommandPalette, bindSelect, bindListbox, bindMenu, bindPopover, bindRadioGroup, bindToggleGroup, bindTreeView, bindAccordion, bindSwitch, bindCheckbox, bindCheckboxGroup, bindSlider, bindRangeSlider, bindTooltip, bindMenubar, bindContextMenu } from "/dist/src/index.js";
       window.bindCombobox = bindCombobox;
       window.bindTabs = bindTabs;
       window.bindDialog = bindDialog;
       window.bindCommandPalette = bindCommandPalette;
       window.bindSelect = bindSelect; window.bindListbox = bindListbox; window.bindMenu = bindMenu; window.bindPopover = bindPopover;
       window.bindRadioGroup = bindRadioGroup; window.bindToggleGroup = bindToggleGroup; window.bindTreeView = bindTreeView; window.bindAccordion = bindAccordion; window.bindSwitch = bindSwitch;
+      window.bindCheckbox = bindCheckbox; window.bindCheckboxGroup = bindCheckboxGroup; window.bindSlider = bindSlider; window.bindRangeSlider = bindRangeSlider; window.bindTooltip = bindTooltip; window.bindMenubar = bindMenubar; window.bindContextMenu = bindContextMenu;
     </script>
   </body>
 </html>

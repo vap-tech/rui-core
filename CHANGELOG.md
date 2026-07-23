@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.0 — 2026-07-24
 
 - Добавлен `CollectionController` с навигацией, selection и событиями.
 - Добавлен Listbox DOM adapter с ARIA-синхронизацией.
@@ -48,3 +48,7 @@
 - Подготовлен release candidate `0.1.0-rc.1`; дальнейшие изменения предполагаются только при обнаружении регрессий.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.
+- Добавлены Checkbox/Checkbox Group, Slider/Range Slider и Tooltip/Hovercard controllers с DOM adapters.
+- Добавлены Menubar и Context Menu поверх общей MenuController-механики.
+- Добавлены browser smoke-тесты новых компонентов для Chromium, Firefox, WebKit и mobile Chromium.
+- Добавлена минимальная Codecov-интеграция через GitHub Actions и coverage badge.

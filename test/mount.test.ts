@@ -24,3 +24,9 @@ test("mount detects listbox and ignores unknown roots", () => {
   assert.ok(RepUI.mount(listbox)); assert.equal(RepUI.mount(unknown), null);
   RepUI.unmount(listbox);
 });
+
+test("mount detects all current adapters and command palette errors", () => {
+  const dom = new JSDOM(`<div data-rui-checkbox-group><button data-rui-checkbox>A</button></div><button data-rui-checkbox></button><div data-rui-slider></div><div data-rui-range-slider><button data-rui-slider-thumb></button><button data-rui-slider-thumb></button></div><div id="tip" data-rui-tooltip></div><div data-rui-hovercard></div><div data-rui-menubar><div data-rui-menu></div></div><div data-rui-context-menu><div data-rui-menu></div></div>`);
+  for (const selector of ["[data-rui-checkbox-group]", "[data-rui-checkbox]", "[data-rui-slider]", "[data-rui-range-slider]", "[data-rui-tooltip]", "[data-rui-hovercard]", "[data-rui-menubar]", "[data-rui-context-menu]"]) { const root = dom.window.document.querySelector(selector) as HTMLElement; const binding = RepUI.mount(root); assert.ok(binding); RepUI.unmount(root); }
+  const invalid = dom.window.document.createElement("div"); invalid.dataset.ruiCommandPalette = ""; assert.throws(() => RepUI.mount(invalid), /requires/);
+});

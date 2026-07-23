@@ -34,3 +34,5 @@ export * from "./slider.js";
 export * from "./slider-dom.js";
 export * from "./tooltip.js";
 export * from "./tooltip-dom.js";
+export * from "./menu-extensions.js";
+export * from "./menu-extensions-dom.js";
