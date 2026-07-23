@@ -1,8 +1,12 @@
 import { bindCombobox, ComboboxBinding } from "./combobox-dom.js";
 import { bindListbox, ListboxBinding } from "./listbox.js";
 import { bindSelect, SelectBinding } from "./select.js";
+import { bindMenu, MenuBinding } from "./menu-dom.js";
+import { bindTabs, TabsBinding } from "./tabs-dom.js";
+import { bindDialog, DialogBinding } from "./dialog-dom.js";
+import { bindPopover, PopoverBinding } from "./popover-dom.js";
 
-export type RepUIBinding = ComboboxBinding | ListboxBinding | SelectBinding;
+export type RepUIBinding = ComboboxBinding | ListboxBinding | SelectBinding | MenuBinding | TabsBinding | DialogBinding | PopoverBinding;
 const instances = new WeakMap<HTMLElement, RepUIBinding>();
 
 export function mount(root: HTMLElement): RepUIBinding | null {
@@ -11,6 +15,10 @@ export function mount(root: HTMLElement): RepUIBinding | null {
   if (root.tagName === "SELECT" || root.matches("select[data-rui-select]")) binding = bindSelect(root as HTMLSelectElement);
   else if (root.matches("[data-rui-combobox]")) binding = bindCombobox(root);
   else if (root.matches("[data-rui-listbox]")) binding = bindListbox(root);
+  else if (root.matches("[data-rui-menu]")) binding = bindMenu(root);
+  else if (root.matches("[data-rui-tabs]")) binding = bindTabs(root);
+  else if (root.matches("[data-rui-dialog]")) binding = bindDialog(root);
+  else if (root.matches("[data-rui-popover]")) binding = bindPopover(root);
   if (binding) instances.set(root, binding);
   return binding;
 }

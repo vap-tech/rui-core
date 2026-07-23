@@ -12,6 +12,11 @@ test("mount detects select and remount destroys previous instance", () => {
   RepUI.unmount(select); RepUI.unmount(select);
 });
 
+test("mount detects headless overlay adapters", () => {
+  const dom = new JSDOM(`<div data-rui-menu><button data-rui-menuitem>Menu</button></div><div data-rui-tabs><button data-rui-tab>Tab</button></div><div data-rui-dialog id="dialog"></div><div data-rui-popover id="popover"></div>`);
+  for (const selector of ["[data-rui-menu]", "[data-rui-tabs]", "[data-rui-dialog]", "[data-rui-popover]"]) { const root = dom.window.document.querySelector(selector) as HTMLElement; assert.ok(RepUI.mount(root)); RepUI.unmount(root); }
+});
+
 test("mount detects listbox and ignores unknown roots", () => {
   const dom = new JSDOM(`<div data-rui-listbox><div data-rui-option>One</div></div><div id="unknown"></div>`);
   const listbox = dom.window.document.querySelector("[data-rui-listbox]") as HTMLElement;
