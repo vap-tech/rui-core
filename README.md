@@ -123,6 +123,8 @@ Listbox поддерживает keyboard navigation, `pointerdown`/pointer inte
 
 HTML-отчёт покрытия после запуска находится в `coverage/index.html`.
 
+Расширенная документация: [API reference](docs/API.md) и [accessibility smoke checklist](docs/ACCESSIBILITY.md).
+
 ## Команды
 
 ```bash
@@ -133,6 +135,7 @@ npm run build
 npm run coverage
 npm run test:browser
 npm run test:browser:docker
+npm run test:browser:mobile
 ```
 
 Для первого запуска browser-тестов установите браузеры Playwright:

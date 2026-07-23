@@ -43,5 +43,8 @@
 - Добавлен `bindCommandPalette` для DOM-интеграции command palette.
 - Добавлена воспроизводимая команда `npm run test:browser:docker` для полного browser suite в Docker.
 - Добавлены Radio Group, Toggle Group, Tree View, Accordion и Switch controllers с DOM adapters.
+- Добавлен mobile Chromium touch smoke suite на эмуляции Pixel 5.
+- Добавлены API reference и accessibility smoke checklist для ручной NVDA/VoiceOver-проверки.
+- Подготовлен release candidate `0.1.0-rc.1`; дальнейшие изменения предполагаются только при обнаружении регрессий.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.
