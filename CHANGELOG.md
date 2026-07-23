@@ -37,5 +37,6 @@
 - Добавлен непозиционируемый `PopoverController` поверх PopupController.
 - Добавлен `bindMenu` с ARIA, roving focus и dynamic DOM refresh.
 - Добавлен `bindTabs` с ARIA, режимами активации и синхронизацией panels.
+- Добавлены `bindDialog` и `bindPopover` для подключения overlay-контроллеров к DOM.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.

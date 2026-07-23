@@ -26,3 +26,8 @@ test("bindMenu maps generated ids, disabled items and ignores nested clicks", ()
   binding.destroy();
   binding.refresh();
 });
+
+test("bindMenu covers closed key events and root id fallback", () => {
+  const dom = new JSDOM(`<div><button data-rui-menuitem>One</button><span><button data-rui-menuitem>Nested</button></span></div>`); const root = dom.window.document.querySelector("div") as HTMLElement; const binding = bindMenu(root);
+  root.dispatchEvent(new dom.window.KeyboardEvent("keydown", { key: "PageDown", bubbles: true })); root.querySelector("button")!.dispatchEvent(new dom.window.MouseEvent("click", { bubbles: true })); binding.destroy(); binding.destroy(); binding.refresh();
+});

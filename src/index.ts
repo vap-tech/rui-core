@@ -14,3 +14,5 @@ export * from "./dialog.js";
 export * from "./popover.js";
 export * from "./menu-dom.js";
 export * from "./tabs-dom.js";
+export * from "./dialog-dom.js";
+export * from "./popover-dom.js";
