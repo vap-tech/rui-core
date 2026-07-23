@@ -132,6 +132,7 @@ npm run typecheck
 npm run build
 npm run coverage
 npm run test:browser
+npm run test:browser:docker
 ```
 
 Для первого запуска browser-тестов установите браузеры Playwright:
@@ -139,3 +140,5 @@ npm run test:browser
 ```bash
 npx playwright install chromium firefox webkit
 ```
+
+На Arch Linux и других системах без совместимых WebKit-зависимостей используйте `npm run test:browser:docker`; команда запускает полный Chromium/Firefox/WebKit suite в официальном Playwright Ubuntu-образе.

@@ -16,6 +16,7 @@
     "test": "tsx --test test/**/*.test.ts",
     "coverage": "c8 --reporter=text --reporter=html npm test",
     "test:browser": "npm run build && playwright test",
+    "test:browser:docker": "docker run --rm --ipc=host -v \"$PWD\":/work -v rui-playwright-node-modules:/work/node_modules -w /work mcr.microsoft.com/playwright:v1.61.1-noble bash -lc 'npm ci --ignore-scripts && npx playwright test'",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "devDependencies": {
