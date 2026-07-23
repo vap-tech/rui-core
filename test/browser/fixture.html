@@ -11,9 +11,23 @@
         </div>
       </div>
     </form>
+    <div id="tabs" data-rui-tabs>
+      <button data-rui-tab data-rui-panel="panel-one">First</button>
+      <button data-rui-tab data-rui-panel="panel-two">Second</button>
+    </div>
+    <div id="panel-one"></div><div id="panel-two"></div>
+    <button data-rui-dialog-trigger="dialog">Open dialog</button>
+    <div id="dialog" data-rui-dialog><button data-rui-dialog-close>Close</button><button>Action</button></div>
+    <div id="palette" data-rui-command-palette>
+      <input data-rui-input aria-label="Command">
+      <div data-rui-popup><button data-rui-command data-value="settings">Settings</button></div>
+    </div>
     <script type="module">
-      import { bindCombobox } from "/dist/src/index.js";
+      import { bindCombobox, bindTabs, bindDialog, bindCommandPalette } from "/dist/src/index.js";
       window.bindCombobox = bindCombobox;
+      window.bindTabs = bindTabs;
+      window.bindDialog = bindDialog;
+      window.bindCommandPalette = bindCommandPalette;
     </script>
   </body>
 </html>
