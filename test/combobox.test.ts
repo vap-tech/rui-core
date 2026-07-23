@@ -114,3 +114,10 @@ test("Tab does not select by default but can select when configured", () => {
   const configured = new ComboboxController({ selectOnTab: true }); configured.setItems(items); configured.setOpen(true); configured.handleKeyDown(key("ArrowDown"));
   assert.equal(configured.handleKeyDown(key("Tab")), true); assert.deepEqual(configured.getState().collection.selectedIds, ["apple"]);
 });
+
+test("emits a unified change payload", () => {
+  const combo = new ComboboxController({ openOnInput: false }); let payload: any;
+  combo.subscribe((_state, reason, change) => { if (reason === "input") payload = change; });
+  combo.setInputValue("abc");
+  assert.equal(payload.reason, "input"); assert.equal(payload.event, null); assert.equal(payload.previousState.inputValue, ""); assert.equal(payload.state.inputValue, "abc");
+});
