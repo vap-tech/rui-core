@@ -13,3 +13,10 @@ test("menu skips disabled items and handles closed/destroyed states", () => {
   const menu = new MenuController(); menu.setItems([{ id: "disabled", value: 1, label: "Disabled", disabled: true }, { id: "ok", value: 2, label: "OK" }]);
   assert.equal(menu.handleKeyDown({ key: "ArrowDown" } as KeyboardEvent), false); menu.open(); menu.handleKeyDown({ key: "ArrowDown" } as KeyboardEvent); assert.equal(menu.getState().activeId, "ok"); menu.handleKeyDown({ key: "Escape" } as KeyboardEvent); menu.toggle(); menu.toggle(); menu.destroy(); assert.throws(() => menu.open(), /destroyed/);
 });
+
+test("menu covers all navigation guards and subscriptions", () => {
+  const menu = new MenuController(); let changes = 0; const unsubscribe = menu.subscribe(() => changes++);
+  menu.setItems([]); menu.open(); menu.open();
+  for (const key of ["ArrowUp", "Home", "End", " ", "Escape", "Escape", "x"]) menu.handleKeyDown({ key } as KeyboardEvent);
+  assert.equal(menu.selectActive(), null); unsubscribe(); assert.ok(changes > 0); menu.destroy(); menu.destroy();
+});
