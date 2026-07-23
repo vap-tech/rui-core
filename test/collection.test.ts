@@ -79,3 +79,9 @@ test("supports collection order for multiple selection", () => {
   collection.setItems(items); collection.select("d"); collection.select("a");
   assert.deepEqual(collection.getState().selectedIds, ["a", "d"]);
 });
+
+test("can focus disabled items without allowing selection", () => {
+  const collection = new CollectionController({ disabledItemsFocusable: true });
+  collection.setItems(items); assert.equal(collection.next(), "a"); assert.equal(collection.next(), "b");
+  assert.equal(collection.select("b"), false); assert.equal(collection.getState().activeId, "b");
+});

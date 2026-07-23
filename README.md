@@ -83,6 +83,7 @@ if (root instanceof HTMLElement) {
 - `filterOptions`
 - `typeahead` / `typeaheadTimeout`
 - `pageSize` для PageUp/PageDown
+- `disabledItemsFocusable` для навигации по disabled options без возможности выбора
 
 Для синхронизации с HTML-формой можно добавить внутрь Combobox элемент `[data-rui-value]`. Adapter будет записывать туда выбранное option или подтверждённое `freeSolo` значение и генерировать стандартные `input`/`change` события.
 

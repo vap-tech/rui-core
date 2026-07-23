@@ -39,6 +39,7 @@ export interface CollectionOptions {
   allowEmptySelection?: boolean;
   loopNavigation?: boolean;
   selectionOrder?: "selection" | "collection";
+  disabledItemsFocusable?: boolean;
 }
 
 type Listener<T> = (change: CollectionChange<T>) => void;
@@ -58,6 +59,7 @@ export class CollectionController<T = unknown> {
       allowEmptySelection: options.allowEmptySelection ?? true,
       loopNavigation: options.loopNavigation ?? false,
       selectionOrder: options.selectionOrder ?? "selection",
+      disabledItemsFocusable: options.disabledItemsFocusable ?? false,
     };
   }
 
@@ -76,6 +78,7 @@ export class CollectionController<T = unknown> {
     const item = this.getItem(id);
     return !!item && !item.disabled && !item.hidden && item.selectable !== false;
   }
+  private isNavigable(id: string): boolean { const item = this.getItem(id); return !!item && !item.hidden && item.selectable !== false && (!item.disabled || this.options.disabledItemsFocusable); }
 
   subscribe(listener: Listener<T>): () => void { this.listeners.add(listener); return () => this.listeners.delete(listener); }
 
@@ -102,7 +105,7 @@ export class CollectionController<T = unknown> {
 
   setActive(id: string | null, mode: InteractionMode = "programmatic", event: Event | null = null): boolean {
     this.assertAlive();
-    if (id !== null && !this.isSelectable(id)) return false;
+    if (id !== null && !this.isNavigable(id)) return false;
     if (id === this.activeId && mode === this.interactionMode) return false;
     const previous = this.getState(); this.activeId = id; this.interactionMode = mode; this.emit(previous, "active", event); return true;
   }
@@ -126,8 +129,8 @@ export class CollectionController<T = unknown> {
 
   destroy(): void { this.destroyed = true; this.listeners.clear(); this.items = []; this.activeId = null; this.selectedIds = []; }
 
-  private move(delta: number, event: Event | null): string | null { this.assertAlive(); const available = this.items.filter((item) => this.isSelectable(item.id)); if (!available.length) return null; const index = available.findIndex((item) => item.id === this.activeId); let next = index < 0 ? (delta > 0 ? 0 : available.length - 1) : index + delta; if (this.options.loopNavigation) next = (next + available.length) % available.length; else next = Math.max(0, Math.min(available.length - 1, next)); this.setActive(available[next].id, "keyboard", event); return available[next].id; }
-  private moveTo(index: number, event: Event | null): string | null { this.assertAlive(); const available = this.items.filter((item) => this.isSelectable(item.id)); if (!available.length) return null; const item = available[index < 0 ? available.length - 1 : index]; this.setActive(item.id, "keyboard", event); return item.id; }
+  private move(delta: number, event: Event | null): string | null { this.assertAlive(); const available = this.items.filter((item) => this.isNavigable(item.id)); if (!available.length) return null; const index = available.findIndex((item) => item.id === this.activeId); let next = index < 0 ? (delta > 0 ? 0 : available.length - 1) : index + delta; if (this.options.loopNavigation) next = (next + available.length) % available.length; else next = Math.max(0, Math.min(available.length - 1, next)); this.setActive(available[next].id, "keyboard", event); return available[next].id; }
+  private moveTo(index: number, event: Event | null): string | null { this.assertAlive(); const available = this.items.filter((item) => this.isNavigable(item.id)); if (!available.length) return null; const item = available[index < 0 ? available.length - 1 : index]; this.setActive(item.id, "keyboard", event); return item.id; }
   private findNearestSelectable(previous: readonly CollectionItem<T>[], previousId: string | null): string | null { const index = previous.findIndex((item) => item.id === previousId); for (let i = index + 1; i < previous.length; i++) if (this.isSelectable(previous[i].id)) return previous[i].id; for (let i = Math.min(index - 1, this.items.length - 1); i >= 0; i--) if (this.isSelectable(this.items[i].id)) return this.items[i].id; return null; }
   private emit(previousState: CollectionState<T>, reason: CollectionReason, event: Event | null): void { const change = { previousState, state: this.getState(), reason, event }; for (const listener of this.listeners) listener(change); }
   private assertAlive(): void { if (this.destroyed) throw new Error("CollectionController has been destroyed"); }
