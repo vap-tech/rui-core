@@ -94,6 +94,15 @@ if (root instanceof HTMLElement) {
 <div id="settings"><button data-rui-dialog-close>Close</button></div>
 ```
 
+`CommandPaletteController` объединяет editable Combobox с поведением command palette:
+
+```ts
+import { CommandPaletteController } from "@repui/core";
+const palette = new CommandPaletteController({ freeSolo: true, clearOnEscape: true });
+palette.setItems([{ id: "settings", value: "settings", label: "Settings" }]);
+palette.open();
+```
+
 ```ts
 import { bindDialog, bindPopover } from "@repui/core";
 const dialog = bindDialog(document.querySelector("#settings")!);

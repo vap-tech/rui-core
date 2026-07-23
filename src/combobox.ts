@@ -65,10 +65,10 @@ export class ComboboxController<T = unknown> {
   select(id: string, event: Event | null = null): boolean { const selected = this.collection.select(id, event); if (selected) { const item = this.collection.getItem(id); if (item) this.inputValue = item.label; if (this.options.closeOnSelect) this.setOpen(false, "select"); this.emit("select"); } return selected; }
   handleKeyDown(event: KeyboardEvent): boolean {
     if (event.isComposing || this.composing) return false;
-    if (event.key === "ArrowDown") { if (!this.open) this.setOpen(true, "keyboard"); this.collection.next(event); return true; }
-    if (event.key === "ArrowUp") { if (!this.open) this.setOpen(true, "keyboard"); this.collection.previous(event); return true; }
-    if (event.key === "Home" && this.open) { this.collection.first(event); return true; }
-    if (event.key === "End" && this.open) { this.collection.last(event); return true; }
+    if (event.key === "ArrowDown") { if (!this.open) this.setOpen(true, "keyboard"); this.moveVisible(1, event); return true; }
+    if (event.key === "ArrowUp") { if (!this.open) this.setOpen(true, "keyboard"); this.moveVisible(-1, event); return true; }
+    if (event.key === "Home" && this.open) { this.moveVisibleTo(0, event); return true; }
+    if (event.key === "End" && this.open) { this.moveVisibleTo(-1, event); return true; }
     if (event.key === "PageDown" && this.open) { this.movePage(1, event); return true; }
     if (event.key === "PageUp" && this.open) { this.movePage(-1, event); return true; }
     if (event.key === "Tab" && this.open && this.options.selectOnTab && this.collection.getState().activeId) return this.select(this.collection.getState().activeId!, event);
@@ -83,6 +83,14 @@ export class ComboboxController<T = unknown> {
   handleBlur(event: Event | null = null): boolean { if (!this.open) return false; const active = this.collection.getState().activeId; if (this.options.autoSelect && active) return this.select(active, event); if (this.options.freeSolo && this.inputValue && !active) { this.freeSoloValue = this.inputValue; this.setOpen(false, "blur"); this.emit("select", event); return true; } this.setOpen(false, "blur"); return true; }
   private handleTypeahead(character: string, event: KeyboardEvent): boolean { const lower = character.toLocaleLowerCase(); const repeated = this.typeaheadBuffer === lower; this.typeaheadBuffer = repeated ? lower : `${this.typeaheadBuffer}${lower}`; const candidates = this.visibleItems.filter((item) => item.label.toLocaleLowerCase().startsWith(this.typeaheadBuffer)); const fallback = repeated ? this.visibleItems.filter((item) => item.label.toLocaleLowerCase().startsWith(lower)) : []; const list = candidates.length ? candidates : fallback; if (!list.length) { if (this.typeaheadTimer) clearTimeout(this.typeaheadTimer); this.typeaheadTimer = setTimeout(() => { this.typeaheadBuffer = ""; this.typeaheadTimer = null; }, this.options.typeaheadTimeout ?? 500); return false; } const current = this.collection.getState().activeId; const index = list.findIndex((item) => item.id === current); const next = list[(index + 1) % list.length]; this.collection.setActive(next.id, "keyboard", event); if (this.typeaheadTimer) clearTimeout(this.typeaheadTimer); this.typeaheadTimer = setTimeout(() => { this.typeaheadBuffer = ""; this.typeaheadTimer = null; }, this.options.typeaheadTimeout ?? 500); return true; }
   private movePage(direction: number, event: KeyboardEvent): void { const items = this.visibleItems.filter((item) => this.collection.isSelectable(item.id)); if (!items.length) return; const current = items.findIndex((item) => item.id === this.collection.getState().activeId); const index = current < 0 ? (direction > 0 ? 0 : items.length - 1) : Math.max(0, Math.min(items.length - 1, current + direction * (this.options.pageSize ?? 5))); this.collection.setActive(items[index].id, "keyboard", event); }
-  private applyFilter(_reason: ComboboxReason): void { const items = this.collection.getState().items; this.visibleItems = [...(this.options.filterOptions?.(items, this.inputValue) ?? items.filter((item) => !this.inputValue || item.label.toLocaleLowerCase().includes(this.inputValue.toLocaleLowerCase())))]; const active = this.collection.getState().activeId; if (active && !this.visibleItems.some((item) => item.id === active)) this.collection.setActive(null, "programmatic"); }
+  private applyFilter(_reason: ComboboxReason): void {
+    const items = this.collection.getState().items;
+    const filtered = this.options.filterOptions?.(items, this.inputValue) ?? items.filter((item) => !this.inputValue || item.label.toLocaleLowerCase().includes(this.inputValue.toLocaleLowerCase()));
+    this.visibleItems = filtered.filter((item) => !item.hidden);
+    const active = this.collection.getState().activeId;
+    if (active && !this.visibleItems.some((item) => item.id === active)) this.collection.setActive(null, "programmatic");
+  }
+  private moveVisible(delta: number, event: KeyboardEvent): void { const items = this.visibleItems.filter((item) => this.collection.isSelectable(item.id)); if (!items.length) return; const index = items.findIndex((item) => item.id === this.collection.getState().activeId); const next = index < 0 ? (delta > 0 ? 0 : items.length - 1) : Math.max(0, Math.min(items.length - 1, index + delta)); this.collection.setActive(items[next].id, "keyboard", event); }
+  private moveVisibleTo(index: number, event: KeyboardEvent): void { const items = this.visibleItems.filter((item) => this.collection.isSelectable(item.id)); if (items.length) this.collection.setActive(items[index < 0 ? items.length - 1 : index].id, "keyboard", event); }
   private emit(reason: ComboboxReason, event: Event | null = null, previousState?: ComboboxState<T>): void { const state = this.getState(); const change = { previousState: previousState ?? this.lastState ?? state, state, reason, event }; this.lastState = state; for (const listener of this.listeners) listener(state, reason, change); }
 }
