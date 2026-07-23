@@ -103,6 +103,8 @@ palette.setItems([{ id: "settings", value: "settings", label: "Settings" }]);
 palette.open();
 ```
 
+Для готовой DOM-разметки доступен `bindCommandPalette(root)` с `[data-rui-input]`, `[data-rui-popup]` и `[data-rui-command]`.
+
 ```ts
 import { bindDialog, bindPopover } from "@repui/core";
 const dialog = bindDialog(document.querySelector("#settings")!);

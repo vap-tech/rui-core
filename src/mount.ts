@@ -5,8 +5,9 @@ import { bindMenu, MenuBinding } from "./menu-dom.js";
 import { bindTabs, TabsBinding } from "./tabs-dom.js";
 import { bindDialog, DialogBinding } from "./dialog-dom.js";
 import { bindPopover, PopoverBinding } from "./popover-dom.js";
+import { bindCommandPalette, CommandPaletteBinding } from "./command-palette-dom.js";
 
-export type RepUIBinding = ComboboxBinding | ListboxBinding | SelectBinding | MenuBinding | TabsBinding | DialogBinding | PopoverBinding;
+export type RepUIBinding = ComboboxBinding | ListboxBinding | SelectBinding | MenuBinding | TabsBinding | DialogBinding | PopoverBinding | CommandPaletteBinding;
 const instances = new WeakMap<HTMLElement, RepUIBinding>();
 
 export function mount(root: HTMLElement): RepUIBinding | null {
@@ -19,6 +20,7 @@ export function mount(root: HTMLElement): RepUIBinding | null {
   else if (root.matches("[data-rui-tabs]")) binding = bindTabs(root);
   else if (root.matches("[data-rui-dialog]")) binding = bindDialog(root);
   else if (root.matches("[data-rui-popover]")) binding = bindPopover(root);
+  else if (root.matches("[data-rui-command-palette]")) binding = bindCommandPalette(root);
   if (binding) instances.set(root, binding);
   return binding;
 }

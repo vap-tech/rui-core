@@ -40,5 +40,6 @@
 - Добавлены `bindDialog` и `bindPopover` для подключения overlay-контроллеров к DOM.
 - Добавлен `CommandPaletteController` как готовая editable/freeSolo-связка поверх Combobox.
 - `RepUI.mount()` расширен для Menu, Tabs, Dialog и Popover adapters.
+- Добавлен `bindCommandPalette` для DOM-интеграции command palette.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.
