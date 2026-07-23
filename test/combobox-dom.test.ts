@@ -106,6 +106,14 @@ test("respects closeOnSelect in DOM adapter", () => {
   second.root.querySelector("#one")!.dispatchEvent(new second.dom.window.MouseEvent("click", { bubbles: true })); assert.equal(secondBinding.popup.getState().open, true); secondBinding.destroy();
 });
 
+test("DOM composition events update value after compositionend", () => {
+  const { dom, input, binding } = setup();
+  input.dispatchEvent(new dom.window.Event("compositionstart", { bubbles: true }));
+  input.value = "тест"; input.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+  input.dispatchEvent(new dom.window.Event("compositionend", { bubbles: true }));
+  assert.equal(binding.controller.getState().inputValue, "тест"); binding.destroy();
+});
+
 test("refreshes options when popup fragment changes", async () => {
   const { dom, popup, binding } = setup();
   const option = dom.window.document.createElement("div"); option.dataset.ruiOption = ""; option.id = "three"; option.textContent = "Three"; popup.append(option);

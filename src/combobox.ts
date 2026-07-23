@@ -46,6 +46,7 @@ export class ComboboxController<T = unknown> {
   private lastState: ComboboxState<T> | null = null;
   private typeaheadBuffer = "";
   private typeaheadTimer: ReturnType<typeof setTimeout> | null = null;
+  private composing = false;
   private readonly options: Required<Pick<ComboboxOptions<T>, "mode" | "freeSolo" | "openOnInput" | "clearOnEscape" | "closeOnSelect">> & ComboboxOptions<T>;
 
   constructor(options: ComboboxOptions<T> = {}) {
@@ -61,7 +62,7 @@ export class ComboboxController<T = unknown> {
   toggle(): void { this.setOpen(!this.open, "programmatic"); }
   select(id: string, event: Event | null = null): boolean { const selected = this.collection.select(id, event); if (selected) { const item = this.collection.getItem(id); if (item) this.inputValue = item.label; if (this.options.closeOnSelect) this.setOpen(false, "select"); this.emit("select"); } return selected; }
   handleKeyDown(event: KeyboardEvent): boolean {
-    if (event.isComposing) return false;
+    if (event.isComposing || this.composing) return false;
     if (event.key === "ArrowDown") { if (!this.open) this.setOpen(true, "keyboard"); this.collection.next(event); return true; }
     if (event.key === "ArrowUp") { if (!this.open) this.setOpen(true, "keyboard"); this.collection.previous(event); return true; }
     if (event.key === "Home" && this.open) { this.collection.first(event); return true; }
@@ -75,6 +76,8 @@ export class ComboboxController<T = unknown> {
     return false;
   }
   destroy(): void { this.listeners.clear(); if (this.typeaheadTimer) clearTimeout(this.typeaheadTimer); this.collection.destroy(); }
+  handleCompositionStart(): void { this.composing = true; }
+  handleCompositionEnd(value?: string): void { this.composing = false; if (value !== undefined) this.setInputValue(value, "input"); }
   private handleTypeahead(character: string, event: KeyboardEvent): boolean { const lower = character.toLocaleLowerCase(); const repeated = this.typeaheadBuffer === lower; this.typeaheadBuffer = repeated ? lower : `${this.typeaheadBuffer}${lower}`; const candidates = this.visibleItems.filter((item) => item.label.toLocaleLowerCase().startsWith(this.typeaheadBuffer)); const fallback = repeated ? this.visibleItems.filter((item) => item.label.toLocaleLowerCase().startsWith(lower)) : []; const list = candidates.length ? candidates : fallback; if (!list.length) { if (this.typeaheadTimer) clearTimeout(this.typeaheadTimer); this.typeaheadTimer = setTimeout(() => { this.typeaheadBuffer = ""; this.typeaheadTimer = null; }, this.options.typeaheadTimeout ?? 500); return false; } const current = this.collection.getState().activeId; const index = list.findIndex((item) => item.id === current); const next = list[(index + 1) % list.length]; this.collection.setActive(next.id, "keyboard", event); if (this.typeaheadTimer) clearTimeout(this.typeaheadTimer); this.typeaheadTimer = setTimeout(() => { this.typeaheadBuffer = ""; this.typeaheadTimer = null; }, this.options.typeaheadTimeout ?? 500); return true; }
   private movePage(direction: number, event: KeyboardEvent): void { const items = this.visibleItems.filter((item) => this.collection.isSelectable(item.id)); if (!items.length) return; const current = items.findIndex((item) => item.id === this.collection.getState().activeId); const index = current < 0 ? (direction > 0 ? 0 : items.length - 1) : Math.max(0, Math.min(items.length - 1, current + direction * (this.options.pageSize ?? 5))); this.collection.setActive(items[index].id, "keyboard", event); }
   private applyFilter(_reason: ComboboxReason): void { const items = this.collection.getState().items; this.visibleItems = [...(this.options.filterOptions?.(items, this.inputValue) ?? items.filter((item) => !this.inputValue || item.label.toLocaleLowerCase().includes(this.inputValue.toLocaleLowerCase())))]; const active = this.collection.getState().activeId; if (active && !this.visibleItems.some((item) => item.id === active)) this.collection.setActive(null, "programmatic"); }

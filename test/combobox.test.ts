@@ -132,3 +132,9 @@ test("ARIA adapter returns framework-independent attributes", () => {
   assert.equal(getOptionAria({ id: "x", value: "x", label: "X", disabled: true }, false)["aria-disabled"], "true");
   assert.equal("aria-disabled" in getOptionAria({ id: "y", value: "y", label: "Y" }, true), false);
 });
+
+test("composition lifecycle defers input handling until composition ends", () => {
+  const combo = new ComboboxController(); combo.setItems(items); combo.handleCompositionStart();
+  combo.setInputValue("тест"); assert.equal(combo.getState().inputValue, "тест");
+  assert.equal(combo.handleKeyDown(key("ArrowDown")), false); combo.handleCompositionEnd("готово"); assert.equal(combo.getState().inputValue, "готово");
+});

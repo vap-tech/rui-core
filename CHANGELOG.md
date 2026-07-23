@@ -25,5 +25,6 @@
 - Добавлена обработка blur lifecycle в `PopupController`.
 - Добавлена настройка порядка multiple selection: selection или collection order.
 - Исправлено соблюдение `closeOnSelect` в Combobox DOM adapter.
+- Улучшена обработка IME/composition input в Combobox.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.
