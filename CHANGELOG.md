@@ -22,5 +22,6 @@
 - Добавлена ранняя pointerdown-активация options в Listbox для touch/pointer сценариев.
 - Унифицирован payload событий `PopupController`.
 - Добавлен чистый ARIA adapter без DOM-зависимости.
+- Добавлена обработка blur lifecycle в `PopupController`.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.

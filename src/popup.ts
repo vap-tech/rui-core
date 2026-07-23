@@ -44,6 +44,12 @@ export class PopupController {
   open(reason: PopupReason = "programmatic"): boolean { return this.setOpen(true, reason); }
   close(reason: PopupReason = "programmatic"): boolean { return this.setOpen(false, reason); }
   toggle(reason: PopupReason = "toggle"): boolean { return this.setOpen(!this.openState, reason); }
+  handleFocusOut(relatedTarget: EventTarget | null): boolean {
+    this.assertAlive(); const NodeConstructor = this.document?.defaultView?.Node; if (!this.openState || !NodeConstructor || !(relatedTarget instanceof NodeConstructor)) return false;
+    if (this.trigger?.contains(relatedTarget) || this.popup?.contains(relatedTarget)) return false;
+    for (const layer of this.allowedLayers) if (layer.contains(relatedTarget)) return false;
+    return this.close("blur");
+  }
   setOpen(open: boolean, reason: PopupReason = "programmatic", event: Event | null = null): boolean {
     this.assertAlive(); if (this.openState === open) return false;
     const previousState = this.getState(); this.openState = open; this.lastReason = reason; this.emit(previousState, event);

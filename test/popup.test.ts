@@ -45,3 +45,14 @@ test("emits popup change payload", () => {
   controller.open("pointer");
   assert.equal(change.previousState.open, false); assert.equal(change.state.open, true); assert.equal(change.reason, "pointer"); assert.equal(change.event, null);
 });
+
+test("closes on focus leaving all popup-owned layers", () => {
+  const dom = new JSDOM(`<button id="trigger"></button><div id="popup"></div><div id="outside"></div>`);
+  const document = dom.window.document; const controller = new PopupController({ document });
+  controller.setTrigger(document.querySelector("#trigger") as HTMLElement); controller.setPopup(document.querySelector("#popup") as HTMLElement); controller.open();
+  assert.equal(controller.handleFocusOut(document.querySelector("#popup")), false);
+  assert.equal(controller.handleFocusOut(document.querySelector("#outside")), true);
+  assert.equal(controller.getState().reason, "blur");
+  assert.equal(controller.handleFocusOut(null), false);
+  assert.equal(controller.close(), false);
+});
