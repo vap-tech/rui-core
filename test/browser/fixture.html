@@ -22,12 +22,23 @@
       <input data-rui-input aria-label="Command">
       <div data-rui-popup><button data-rui-command data-value="settings">Settings</button></div>
     </div>
+    <select id="select" data-rui-select><option value="a">A</option><option value="b">B</option></select>
+    <div id="listbox" data-rui-listbox tabindex="0"><button data-rui-option id="l-one">One</button><button data-rui-option id="l-two">Two</button></div>
+    <div id="menu" data-rui-menu tabindex="0"><button data-rui-menuitem id="m-one">Menu one</button><button data-rui-menuitem id="m-two">Menu two</button></div>
+    <button data-rui-popover-trigger="popover">Open popover</button><div id="popover" data-rui-popover tabindex="0">Popover</div>
+    <div id="radio" data-rui-radio-group><button data-rui-radio>One</button><button data-rui-radio>Two</button></div>
+    <div id="toggle" data-rui-toggle-group><button data-rui-toggle>Bold</button><button data-rui-toggle>Italic</button></div>
+    <div id="tree" data-rui-tree><button data-rui-treeitem>Root</button><button data-rui-treeitem data-parent="tree-0">Child</button></div>
+    <div id="accordion" data-rui-accordion><section id="acc-one" data-rui-accordion-item><button data-rui-accordion-trigger>Section</button><div data-rui-accordion-content>Content</div></section></div>
+    <button id="switch" data-rui-switch>Switch</button>
     <script type="module">
-      import { bindCombobox, bindTabs, bindDialog, bindCommandPalette } from "/dist/src/index.js";
+      import { bindCombobox, bindTabs, bindDialog, bindCommandPalette, bindSelect, bindListbox, bindMenu, bindPopover, bindRadioGroup, bindToggleGroup, bindTreeView, bindAccordion, bindSwitch } from "/dist/src/index.js";
       window.bindCombobox = bindCombobox;
       window.bindTabs = bindTabs;
       window.bindDialog = bindDialog;
       window.bindCommandPalette = bindCommandPalette;
+      window.bindSelect = bindSelect; window.bindListbox = bindListbox; window.bindMenu = bindMenu; window.bindPopover = bindPopover;
+      window.bindRadioGroup = bindRadioGroup; window.bindToggleGroup = bindToggleGroup; window.bindTreeView = bindTreeView; window.bindAccordion = bindAccordion; window.bindSwitch = bindSwitch;
     </script>
   </body>
 </html>

@@ -6,8 +6,11 @@ import { bindTabs, TabsBinding } from "./tabs-dom.js";
 import { bindDialog, DialogBinding } from "./dialog-dom.js";
 import { bindPopover, PopoverBinding } from "./popover-dom.js";
 import { bindCommandPalette, CommandPaletteBinding } from "./command-palette-dom.js";
+import { bindTreeView, TreeViewBinding } from "./tree-view-dom.js";
+import { bindAccordion, AccordionBinding } from "./accordion-dom.js";
+import { bindSwitch, SwitchBinding } from "./switch-dom.js";
 
-export type RepUIBinding = ComboboxBinding | ListboxBinding | SelectBinding | MenuBinding | TabsBinding | DialogBinding | PopoverBinding | CommandPaletteBinding;
+export type RepUIBinding = ComboboxBinding | ListboxBinding | SelectBinding | MenuBinding | TabsBinding | DialogBinding | PopoverBinding | CommandPaletteBinding | TreeViewBinding | AccordionBinding | SwitchBinding;
 const instances = new WeakMap<HTMLElement, RepUIBinding>();
 
 export function mount(root: HTMLElement): RepUIBinding | null {
@@ -21,6 +24,9 @@ export function mount(root: HTMLElement): RepUIBinding | null {
   else if (root.matches("[data-rui-dialog]")) binding = bindDialog(root);
   else if (root.matches("[data-rui-popover]")) binding = bindPopover(root);
   else if (root.matches("[data-rui-command-palette]")) binding = bindCommandPalette(root);
+  else if (root.matches("[data-rui-tree]")) binding = bindTreeView(root);
+  else if (root.matches("[data-rui-accordion]")) binding = bindAccordion(root);
+  else if (root.matches("[data-rui-switch]")) binding = bindSwitch(root);
   if (binding) instances.set(root, binding);
   return binding;
 }

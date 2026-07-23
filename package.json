@@ -1,6 +1,6 @@
 {
   "name": "@repui/core",
-  "version": "0.1.0-beta.1",
+  "version": "0.1.0-beta.2",
   "private": true,
   "type": "module",
   "main": "./dist/src/index.js",
@@ -16,7 +16,7 @@
     "test": "tsx --test test/**/*.test.ts",
     "coverage": "c8 --reporter=text --reporter=html npm test",
     "test:browser": "npm run build && playwright test",
-    "test:browser:docker": "docker run --rm --ipc=host -v \"$PWD\":/work -v rui-playwright-node-modules:/work/node_modules -w /work mcr.microsoft.com/playwright:v1.61.1-noble bash -lc 'npm ci --ignore-scripts && npx playwright test'",
+    "test:browser:docker": "docker run --rm --ipc=host -v \"$PWD\":/work --tmpfs /work/node_modules:exec -w /work mcr.microsoft.com/playwright:v1.61.1-noble bash -lc 'npm ci --ignore-scripts && npx playwright test'",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "devDependencies": {

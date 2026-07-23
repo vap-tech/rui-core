@@ -42,5 +42,6 @@
 - `RepUI.mount()` расширен для Menu, Tabs, Dialog и Popover adapters.
 - Добавлен `bindCommandPalette` для DOM-интеграции command palette.
 - Добавлена воспроизводимая команда `npm run test:browser:docker` для полного browser suite в Docker.
+- Добавлены Radio Group, Toggle Group, Tree View, Accordion и Switch controllers с DOM adapters.
 - Добавлены unit- и DOM-тесты.
 - Добавлена проверка покрытия через `npm run coverage`.
