@@ -61,7 +61,7 @@ test("handles empty collections and rejects invalid operations", () => {
   assert.equal(collection.next(), null); assert.equal(collection.first(), null);
   assert.equal(collection.setActive("missing"), false);
   assert.equal(collection.select("missing"), false);
-  assert.equal(collection.clearSelection(), true);
+  assert.equal(collection.clearSelection(), false);
   assert.throws(() => collection.setItems([{ id: "x", value: 1, label: "x" }, { id: "x", value: 2, label: "duplicate" }]), /unique/);
 });
 
@@ -84,4 +84,16 @@ test("can focus disabled items without allowing selection", () => {
   const collection = new CollectionController({ disabledItemsFocusable: true });
   collection.setItems(items); assert.equal(collection.next(), "a"); assert.equal(collection.next(), "b");
   assert.equal(collection.select("b"), false); assert.equal(collection.getState().activeId, "b");
+});
+
+test("enforces non-empty selection and protects state snapshots", () => {
+  const collection = new CollectionController({ allowEmptySelection: false }); collection.setItems(items); collection.select("a");
+  assert.equal(collection.deselect("a"), false); assert.equal(collection.clearSelection(), false); assert.deepEqual(collection.getState().selectedIds, ["a"]);
+  const state = collection.getState(); (state.selectedIds as string[]).push("d"); (state.items as Array<typeof items[number]>).pop(); assert.deepEqual(collection.getState().selectedIds, ["a"]); assert.equal(collection.getState().items.length, 4);
+  collection.destroy();
+  const multiple = new CollectionController({ selectionMode: "multiple", allowEmptySelection: false }); multiple.setItems(items); multiple.select("a"); multiple.select("d"); assert.equal(multiple.deselect("a"), true); assert.equal(multiple.deselect("d"), false); multiple.destroy();
+});
+
+test("preserves focusable disabled active item across item refresh", () => {
+  const collection = new CollectionController({ disabledItemsFocusable: true }); collection.setItems(items); collection.next(); collection.next(); assert.equal(collection.getState().activeId, "b"); collection.updateItem("a", { label: "updated" }); assert.equal(collection.getState().activeId, "b"); collection.destroy();
 });

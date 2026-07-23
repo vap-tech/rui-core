@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1 — 2026-07-24
+
+- Уточнён контракт `allowEmptySelection: false`: последний выбранный item нельзя снять или очистить.
+- Исправлено сохранение active disabled item при `disabledItemsFocusable: true` во время обновления коллекции.
+- `CollectionController.getState()` и `previousState` теперь используют безопасные snapshots массивов.
+
 ## 0.1.0 — 2026-07-24
 
 - Добавлен `CollectionController` с навигацией, selection и событиями.

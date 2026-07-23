@@ -36,6 +36,12 @@ instance.destroy();
 - `MenubarController` — связка нескольких MenuController с arrow navigation.
 - `ContextMenuController` — contextmenu/keyboard opening и координаты открытия.
 
+### Collection options
+
+- `allowEmptySelection: false` запрещает снять последний выбранный item; это относится к single и multiple selection.
+- `disabledItemsFocusable: true` разрешает делать disabled item активным для навигации, но не разрешает его выбирать.
+- `getState()` возвращает snapshots массивов `items` и `selectedIds`; изменение результата снаружи не меняет внутреннее состояние контроллера.
+
 ## DOM adapters
 
 ```ts
