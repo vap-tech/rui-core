@@ -97,3 +97,15 @@ test("enforces non-empty selection and protects state snapshots", () => {
 test("preserves focusable disabled active item across item refresh", () => {
   const collection = new CollectionController({ disabledItemsFocusable: true }); collection.setItems(items); collection.next(); collection.next(); assert.equal(collection.getState().activeId, "b"); collection.updateItem("a", { label: "updated" }); assert.equal(collection.getState().activeId, "b"); collection.destroy();
 });
+
+test("repairs active item after reorder, removal and hidden neighbor", () => {
+  const collection = new CollectionController(); collection.setItems([
+    { id: "a", value: "a", label: "A" },
+    { id: "b", value: "b", label: "B" },
+    { id: "c", value: "c", label: "C" },
+  ]); collection.setActive("b"); collection.setItems([
+    { id: "c", value: "c", label: "C", hidden: true },
+    { id: "a", value: "a", label: "A" },
+  ]); assert.equal(collection.getState().activeId, "a");
+  collection.setItems([{ id: "new", value: "new", label: "New" }]); assert.equal(collection.getState().activeId, "new"); collection.destroy();
+});
