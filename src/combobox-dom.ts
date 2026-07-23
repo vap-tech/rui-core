@@ -43,7 +43,7 @@ export function bindCombobox<T = string>(root: HTMLElement, options: ComboboxOpt
   const onInput = (): void => controller.setInputValue((input as HTMLInputElement).value);
   const onFocus = (): void => { if (options.openOnFocus) { controller.setOpen(true, "open"); sync(); } };
   const onKeyDown = (event: KeyboardEvent): void => { if (controller.handleKeyDown(event)) { event.preventDefault(); sync(); } };
-  const onClick = (event: MouseEvent): void => { const option = (event.target as HTMLElement).closest<HTMLElement>("[data-rui-option]"); if (option?.parentElement === popupElement) { controller.select(option.id, event); popup.close("select"); sync(); } };
+  const onClick = (event: MouseEvent): void => { const option = (event.target as HTMLElement).closest<HTMLElement>("[data-rui-option]"); if (option?.parentElement === popupElement) { controller.select(option.id, event); if (options.closeOnSelect !== false) popup.close("select"); sync(); } };
   const onValueChange = (): void => { if (valueElement) { valueElement.dispatchEvent(new valueElement.ownerDocument.defaultView!.Event("input", { bubbles: true })); valueElement.dispatchEvent(new valueElement.ownerDocument.defaultView!.Event("change", { bubbles: true })); } };
   input.addEventListener("input", onInput); input.addEventListener("focus", onFocus); input.addEventListener("keydown", onKeyDown); popupElement.addEventListener("click", onClick); const unsubscribeValue = controller.subscribe(() => onValueChange());
   refresh();

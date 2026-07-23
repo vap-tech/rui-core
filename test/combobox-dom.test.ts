@@ -97,6 +97,15 @@ test("syncs selected and freeSolo values to a form input", () => {
   binding.controller.setInputValue("custom"); binding.controller.setOpen(true); binding.controller.handleKeyDown({ key: "Enter", isComposing: false } as KeyboardEvent); assert.equal(value.value, "custom"); binding.destroy();
 });
 
+test("respects closeOnSelect in DOM adapter", () => {
+  const { dom, root, binding } = setup();
+  binding.popup.open(); const option = root.querySelector("#one")!;
+  // default closes
+  option.dispatchEvent(new dom.window.MouseEvent("click", { bubbles: true })); assert.equal(binding.popup.getState().open, false); binding.destroy();
+  const second = setup(); const secondBinding = bindCombobox(second.root, { closeOnSelect: false }); secondBinding.popup.open();
+  second.root.querySelector("#one")!.dispatchEvent(new second.dom.window.MouseEvent("click", { bubbles: true })); assert.equal(secondBinding.popup.getState().open, true); secondBinding.destroy();
+});
+
 test("refreshes options when popup fragment changes", async () => {
   const { dom, popup, binding } = setup();
   const option = dom.window.document.createElement("div"); option.dataset.ruiOption = ""; option.id = "three"; option.textContent = "Three"; popup.append(option);
