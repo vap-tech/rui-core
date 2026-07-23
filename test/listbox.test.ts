@@ -77,3 +77,10 @@ test("refreshes automatically after option insertion", async () => {
   await new Promise((resolve) => setTimeout(resolve, 0));
   assert.equal(binding.controller.getItem("four")?.label, "Four"); binding.destroy();
 });
+
+test("pointerdown activates without selecting", () => {
+  const { dom, root, binding } = setup();
+  root.querySelector("#three")!.dispatchEvent(new dom.window.Event("pointerdown", { bubbles: true }));
+  assert.equal(binding.controller.getState().activeId, "three");
+  assert.deepEqual(binding.controller.getState().selectedIds, []); binding.destroy();
+});

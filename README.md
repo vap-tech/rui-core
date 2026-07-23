@@ -73,6 +73,21 @@ if (root instanceof HTMLElement) {
 }
 ```
 
+Основные настройки Combobox:
+
+- `mode: "editable" | "select-only"`
+- `freeSolo`
+- `openOnInput` и `openOnFocus`
+- `selectOnTab`
+- `clearOnEscape` и `closeOnSelect`
+- `filterOptions`
+- `typeahead` / `typeaheadTimeout`
+- `pageSize` для PageUp/PageDown
+
+Для синхронизации с HTML-формой можно добавить внутрь Combobox элемент `[data-rui-value]`. Adapter будет записывать туда выбранное option или подтверждённое `freeSolo` значение и генерировать стандартные `input`/`change` события.
+
+Listbox поддерживает keyboard navigation, `pointerdown`/pointer interaction, typeahead через общий controller, disabled/hidden options и автоматическое обновление после изменения DOM.
+
 При замене HTML-фрагмента старый instance нужно уничтожить. Для этого можно использовать `RepUI.unmount(root)` перед повторным `RepUI.mount(root)`; adapters также автоматически обновляют options через `MutationObserver`.
 
 ## Разработка

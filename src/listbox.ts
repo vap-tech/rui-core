@@ -54,6 +54,7 @@ export function bindListbox<T = string>(root: HTMLElement, options: ListboxOptio
   const observer = Observer ? new Observer(() => refresh()) : null;
   observer?.observe(root, { childList: true, subtree: true });
   const onPointerMove = (event: PointerEvent): void => { const option = (event.target as HTMLElement).closest<HTMLElement>(optionSelector); if (option?.parentElement === root) controller.setActive(option.id, "pointer", event); };
+  const onPointerDown = (event: PointerEvent): void => { const option = (event.target as HTMLElement).closest<HTMLElement>(optionSelector); if (option?.parentElement === root) controller.setActive(option.id, "pointer", event); };
   const onClick = (event: MouseEvent): void => { const option = (event.target as HTMLElement).closest<HTMLElement>(optionSelector); if (option?.parentElement === root) controller.select(option.id, event); };
   const onKeyDown = (event: KeyboardEvent): void => {
     if (event.key === "ArrowDown") { event.preventDefault(); controller.next(event); }
@@ -64,6 +65,7 @@ export function bindListbox<T = string>(root: HTMLElement, options: ListboxOptio
   };
 
   root.addEventListener("pointermove", onPointerMove);
+  root.addEventListener("pointerdown", onPointerDown);
   root.addEventListener("click", onClick);
   root.addEventListener("keydown", onKeyDown);
   refresh();
@@ -75,6 +77,7 @@ export function bindListbox<T = string>(root: HTMLElement, options: ListboxOptio
       if (destroyed) return;
       destroyed = true; unsubscribe(); observer?.disconnect();
       root.removeEventListener("pointermove", onPointerMove);
+      root.removeEventListener("pointerdown", onPointerDown);
       root.removeEventListener("click", onClick);
       root.removeEventListener("keydown", onKeyDown);
       if (!options.controller) controller.destroy();
