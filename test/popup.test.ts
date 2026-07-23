@@ -38,3 +38,10 @@ test("supports toggle and disabled outside-click", () => {
   controller.toggle(); outside.dispatchEvent(new dom.window.Event("pointerdown", { bubbles: true }));
   assert.equal(controller.getState().open, true); controller.toggle(); assert.equal(controller.getState().open, false);
 });
+
+test("emits popup change payload", () => {
+  const controller = new PopupController(); let change: any;
+  controller.subscribe((_state, payload) => { change = payload; });
+  controller.open("pointer");
+  assert.equal(change.previousState.open, false); assert.equal(change.state.open, true); assert.equal(change.reason, "pointer"); assert.equal(change.event, null);
+});
