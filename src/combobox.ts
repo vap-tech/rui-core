@@ -8,6 +8,7 @@ export interface ComboboxOptions<T = unknown> {
   freeSolo?: boolean;
   openOnInput?: boolean;
   openOnFocus?: boolean;
+  autoHighlight?: boolean;
   clearOnEscape?: boolean;
   closeOnSelect?: boolean;
   selectionMode?: SelectionMode;
@@ -58,7 +59,7 @@ export class ComboboxController<T = unknown> {
   subscribe(listener: Listener<T>): () => void { this.listeners.add(listener); return () => this.listeners.delete(listener); }
   setItems(items: readonly CollectionItem<T>[]): void { this.collection.setItems(items); this.applyFilter("programmatic"); this.emit("programmatic"); }
   setInputValue(value: string, reason: ComboboxReason = "input"): void { const previous = this.getState(); this.inputValue = value; this.applyFilter(reason); if (this.options.openOnInput && value) this.setOpen(true, "input"); this.emit(reason, null, previous); }
-  setOpen(open: boolean, reason: ComboboxReason = "programmatic"): void { if (this.open === open) return; const previous = this.getState(); this.open = open; this.emit(reason === "escape" ? "escape" : open ? "open" : "close", null, previous); }
+  setOpen(open: boolean, reason: ComboboxReason = "programmatic"): void { if (this.open === open) return; const previous = this.getState(); this.open = open; if (open && this.options.autoHighlight && !this.collection.getState().activeId) { const first = this.visibleItems.find((item) => this.collection.isSelectable(item.id)); if (first) this.collection.setActive(first.id, "programmatic"); } this.emit(reason === "escape" ? "escape" : open ? "open" : "close", null, previous); }
   toggle(): void { this.setOpen(!this.open, "programmatic"); }
   select(id: string, event: Event | null = null): boolean { const selected = this.collection.select(id, event); if (selected) { const item = this.collection.getItem(id); if (item) this.inputValue = item.label; if (this.options.closeOnSelect) this.setOpen(false, "select"); this.emit("select"); } return selected; }
   handleKeyDown(event: KeyboardEvent): boolean {

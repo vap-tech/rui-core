@@ -138,3 +138,8 @@ test("composition lifecycle defers input handling until composition ends", () =>
   combo.setInputValue("тест"); assert.equal(combo.getState().inputValue, "тест");
   assert.equal(combo.handleKeyDown(key("ArrowDown")), false); combo.handleCompositionEnd("готово"); assert.equal(combo.getState().inputValue, "готово");
 });
+
+test("autoHighlight activates first visible option without selecting it", () => {
+  const combo = new ComboboxController({ autoHighlight: true }); combo.setItems(items); combo.setOpen(true);
+  assert.equal(combo.getState().collection.activeId, "apple"); assert.deepEqual(combo.getState().collection.selectedIds, []);
+});
