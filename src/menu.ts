@@ -4,7 +4,7 @@ export type MenuReason = "keyboard" | "pointer" | "escape" | "select" | "program
 export interface MenuState<T = unknown> { open: boolean; activeId: string | null; items: readonly CollectionItem<T>[]; }
 
 export class MenuController<T = unknown> {
-  readonly collection = new CollectionController<T>({ loopNavigation: true });
+  readonly collection = new CollectionController<T>({ loopNavigation: false });
   private openState = false;
   private readonly listeners = new Set<(state: MenuState<T>, reason: MenuReason) => void>();
   private destroyed = false;
