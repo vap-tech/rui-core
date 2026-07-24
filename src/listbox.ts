@@ -47,6 +47,7 @@ export function bindListbox<T = string>(root: HTMLElement, options: ListboxOptio
       element.toggleAttribute("data-active", active);
       element.toggleAttribute("data-selected", selected);
     }
+    if (state.activeId) controller.getState().items.find((item) => item.id === state.activeId)?.element?.scrollIntoView?.({ block: "nearest" });
   };
 
   const unsubscribe = controller.subscribe(sync);
