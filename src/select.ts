@@ -7,7 +7,7 @@ export interface SelectBinding<T = string> {
   destroy(): void;
 }
 
-export function bindSelect<T = string>(select: HTMLSelectElement): SelectBinding<T> {
+export function bindNativeSelect<T = string>(select: HTMLSelectElement): SelectBinding<T> {
   const controller = new ComboboxController<T>({ mode: "select-only", openOnInput: false, closeOnSelect: true });
   let destroyed = false;
   const initialValue = select.value;
@@ -30,3 +30,6 @@ export function bindSelect<T = string>(select: HTMLSelectElement): SelectBinding
   controller.select = ((id: string, event: Event | null = null) => { const changed = originalSelect(id, event); if (changed) { sync(); emitValueEvents(); } return changed; }) as typeof controller.select;
   return { controller, refresh, destroy(): void { if (destroyed) return; destroyed = true; unsubscribe(); observer?.disconnect(); select.removeEventListener("change", onChange); select.form?.removeEventListener("reset", onReset); controller.destroy(); } };
 }
+
+/** @deprecated Use bindNativeSelect for the native control adapter. */
+export const bindSelect = bindNativeSelect;

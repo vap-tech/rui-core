@@ -34,6 +34,7 @@ export function bindListbox<T = string>(root: HTMLElement, options: ListboxOptio
 
   const sync = (): void => {
     const state = controller.getState();
+    root.dataset.inputMode = state.interactionMode;
     for (const item of state.items) {
       const element = item.element;
       if (!element) continue;
